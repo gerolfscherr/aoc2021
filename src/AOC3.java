@@ -1,12 +1,8 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,7 +40,6 @@ public class AOC3 {
                     char c = s.charAt(i);
                     if (c =='0') zeroes[i]++; else ones[i]++;
                 }
-                //System.out.println(s);
             }
         }
         calc1(zeroes, ones);
@@ -99,5 +94,4 @@ public class AOC3 {
         }
         calc2(data);
     }
-
 }
