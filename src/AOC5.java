@@ -72,7 +72,7 @@ public class AOC5 {
     }
 
     private void start(String fn) throws IOException {
-        var a =Files.lines(Paths.get(fn)).map(s->{
+        var a =Files.lines(Paths.get(fn)).map(s -> {
             return new Line(Pattern.compile("\\D+").splitAsStream(s).mapToInt(Integer::parseInt).boxed().toList());
         }).collect(Collectors.toList());
 
