@@ -91,6 +91,7 @@ public class AOC4 {
     List<Board> myBoards = new ArrayList<>(), myBoards2;
 
     private void start(String arg) throws IOException {
+
         try (BufferedReader r = new BufferedReader((new FileReader(arg)))) {
             myDraw = Arrays.stream(r.readLine().split(",")).map(Integer::valueOf).collect(Collectors.toList());
             String s = null;

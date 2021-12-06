@@ -74,8 +74,7 @@ public class AOC5 {
     private void start(String fn) throws IOException {
         var a =Files.lines(Paths.get(fn)).map(s -> {
             return new Line(Pattern.compile("\\D+").splitAsStream(s).mapToInt(Integer::parseInt).boxed().toList());
-        }).collect(Collectors.toList());
-
+        }) .toList();
         var b = a.stream().flatMap(s->s.getPoints());
         var c = b.collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         System.out.println(c.entrySet().stream().filter(x -> x.getValue() > 1).count());
