@@ -10,7 +10,6 @@ public class AOC6 {
     public static void main(String[] args) throws IOException {
         new AOC6().start(args[0]);
         new AOC6().start2(args[0]);
-
     }
 
     private void start(String fn) throws IOException {
