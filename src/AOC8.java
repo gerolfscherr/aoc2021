@@ -88,12 +88,20 @@ public class AOC8 {
     }
 
     private String minus(String first, String second) {
+        var a =first.chars().mapToObj(c -> (char)c).collect(Collectors.toList());
+        a.removeAll(second.chars().mapToObj(c->(char)c).toList());
+        // supplier, accumulator, combiner - > combiner wg paralellisierung
+        // https://stackoverflow.com/questions/31533316/about-collect-supplier-accumulator-combiner
+        // der supplier erzeugt den collector, der accumulator
+        return a.stream().collect(StringBuilder::new, (b,c) -> b.append((char)c), StringBuilder::append).toString();
+
+/*
        StringBuilder b = new StringBuilder();
        for (char c: first.toCharArray()) {
            if (second.indexOf(c) >=0) continue;
            b.append(c);
        }
-       return b.toString();
+       return b.toString(); */
     }
 
     // return s true if s contails all chars of s1
