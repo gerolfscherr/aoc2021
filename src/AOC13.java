@@ -8,16 +8,17 @@ import java.util.stream.Collectors;
 public class AOC13 {
 
     public static void main(String[] args) throws IOException {
-        new AOC13().start(args[0]);
+        for (int i = 0; i < Integer.parseInt(args[1]); i++)
+            new AOC13().start(args[0]);
     }
 
-    class Split {String coord; int val; public Split(String c, int v) { coord = c; val = v; }
+    private static final class Split { final String coord; final int val; public Split(String c, int v) { coord = c; val = v; }
         public @Override String  toString() { return "Split(" + coord + ", " + val + ")"; }
     }
 
     private void start(String fn) throws IOException {
-    Set<Point> points = new HashSet<>();
-    List<Split> splits = new ArrayList<>();
+        Set<Point> points = new HashSet<>();
+        List<Split> splits = new ArrayList<>();
         Files.lines(Paths.get(fn)).forEach(s-> {
             if (s.contains(",")) {
                 int[] a = Arrays.stream(s.split(",")).mapToInt(Integer::parseInt).toArray();
@@ -44,13 +45,13 @@ public class AOC13 {
             if (first) { first = false; System.out.println("first:" + o.size()); }
         } while(splits.size() > 0);
 
-
-        //print it. obv ths has really bad runtime, but who cares
-        System.out.println("set:" + o);
-        for (int y = 0; y < 10; y++) {
-            outer: for (int x =0; x < 50; x++) {
+//        Point pmax = o.stream().reduce(new Point(0,0), (p,c) -> {   p.x = Math.max(p.x, c.x); p.y = Math.max(p.y, c.y); return p;  });
+       // System.out.println("set:" + o);
+        outer: for (int y = 0; y <= 10; y++) {
+            inner: for (int x =0; x <= 50; x++) {
+                if (o.isEmpty()) break outer;
                 for (Point p : o) {
-                    if (p.x== x && p.y == y) { System.out.print("##"); continue outer;}
+                    if (p.x== x && p.y == y) { System.out.print("##"); o.remove(p); continue inner;}
                 }
                 System.out.print("  ");
             }

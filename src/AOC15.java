@@ -1,4 +1,3 @@
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,10 +15,12 @@ public class AOC15 {
 
         @Override
         public boolean equals(Object o) {
+            if (o == this) return true;
             if (o instanceof Point p) { return p.x == x && p.y == y; }
             return false;
         }
 
+//equals objects must have same hash code
         @Override
         public int hashCode() {
             return y*311 + x;
@@ -27,16 +28,22 @@ public class AOC15 {
 
         public String toString() {
             return "(" + x + ", " + y + ") -> " + cost;
-            //return "x:" + x + ",y:" + y + ",c:" + cost;
         }
 
+        // treeset stipulates that if compareto == 0 the objects are equal. so we have to compare all properties here
+        // even if we are interested only in the cost.
+        // another solution would be to use LinkedList, but it has complexity of N instead of log N
         @Override
-        public int compareTo(@NotNull Point o) {
-            return   cost- o.cost;
+        public int compareTo(Point o) {
+            int r =   cost- o.cost;
+            if (r ==0) r = y-o.y;
+            if (r ==0) r = x-o.x;
+            return r;
         }
     }
 
     public static void main(String[] args) throws IOException {
+       // for (int i = 0 ; i <  Integer.parseInt(args[1]);i++ )
         new AOC15().start(args[0]);
     }
 
@@ -47,17 +54,14 @@ public class AOC15 {
 
     private void part1(List<int[]> data) {
         solve1(data);
-        sz1 = data.size();
-        sz2 = data.size()*5;
         solve2(data);
     }
 
     final static int[][] DIR = { {0,1}, {1,0}, {0,-1}, {-1,0} };
-
-    int sz1, sz2;
+    final static int sz1 = 100, sz2=500;
 
     private void solve2(List<int[]> data) {
-        LinkedList<Point> next = new LinkedList<>();
+        TreeSet<Point>next = new TreeSet<>();
         next.add(new Point(0,0, 0));
         Set<Point> visited = new HashSet<>();
         int i = 0;
@@ -72,22 +76,21 @@ public class AOC15 {
                 int a = cur.x+dir[0], b = cur.y + dir[1];
                 if (b < 0 || b >= sz2) continue;
                 if (a < 0 || a >= sz2) continue;
-
                 Point p = new Point(a,b,  getCost(data, a,b) + cur.cost);
                 if (visited.contains(p) || next.contains(p)) continue;
                 next.add(p);
             }
-            next.sort((p1, p2) ->p1.cost - p2.cost);
         }
     }
 
-    int getDelta(int i, int j) {
+
+    private final static int getDelta(int i, int j) {
         if (i == 0 & j == 0 ) return 0;
         if (j == 0) return i;
         return 1+getDelta(i, j-1);
     }
 
-    private int getCost(List<int[]> data, int x, int y) {
+    private final static int getCost(List<int[]> data, int x, int y) {
         int a = x%sz1;
         int b = y%sz1;
         int c = data.get(b)[a];
@@ -101,7 +104,7 @@ public class AOC15 {
 
     private void solve1(List<int[]> data) {
         System.out.println("solve");
-        LinkedList<Point> next = new LinkedList<>();
+        TreeSet<Point> next = new TreeSet<>();
         next.add(new Point(0,0, 0));
         Set<Point> visited = new HashSet<>();
         int i = 0;
@@ -121,7 +124,7 @@ public class AOC15 {
                 if (visited.contains(p) || next.contains(p)) continue;
                 next.add(p);
             }
-            next.sort(null);
+            //next.sort(null);
         }
     }
 

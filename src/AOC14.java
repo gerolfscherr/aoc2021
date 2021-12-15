@@ -3,6 +3,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AOC14 {
@@ -22,7 +24,7 @@ public class AOC14 {
 
     void process2(String in, Map<String, String>dict, int rounds) {
         var pairs = new HashMap<String, Long>();
-        for (int i = 0 ; i < in.length()-1; i++) pairs.merge(in.substring(i, i+2), 1l, Long::sum);
+                for (int i = 0 ; i < in.length()-1; i++) pairs.merge(in.substring(i, i+2), 1l, Long::sum);
         var letters = in.chars().boxed().map(s->Character.toString(s)).collect(Collectors.toMap(x->x, x->1l, Long::sum));
 
         for (int i = 0 ; i < rounds; i++) {
@@ -42,7 +44,14 @@ public class AOC14 {
         }
         var freq= letters.values().stream().sorted().toList();
         System.out.println("part:" + (freq.get(freq.size()-1) - freq.get(0)));
+
+        Predicate<List> p = (l) -> l.size() > 5;
+        Function<String, Integer> f = (s)-> Integer.parseInt(s);
+
+
     }
+
+
 
 
 /*

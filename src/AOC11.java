@@ -24,7 +24,7 @@ public class AOC11 {
         do {
             step(d2);
             step2++;
-        } while (d2.stream().filter(s -> IntStream.of(s).filter(t-> t != 0).findFirst().isPresent() ).findFirst().isPresent() );
+        } while (d2.stream().filter(s -> IntStream.of(s).filter(t-> t !=    0).findFirst().isPresent() ).findFirst().isPresent() );
         //while (d2.stream().map( d -> IntStream.of(d).sum()).collect(Collectors.summingInt(Integer::intValue)) > 0);
         System.out.println("step2:" + step2);
 
