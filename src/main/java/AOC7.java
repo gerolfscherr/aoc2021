@@ -1,4 +1,3 @@
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,7 +13,7 @@ public class AOC7 {
         start2(l);
     }
 
-    private static void start2(@NotNull List<Integer> l) {
+    private static void start2( List<Integer> l) {
         int min = Integer.MAX_VALUE;
         int minindex = 0;
         for (int j = 0 ; j < l.size(); j++) {
