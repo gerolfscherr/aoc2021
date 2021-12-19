@@ -3,7 +3,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 
-
 class Node {
     int left =-1;
     int right =-1;
@@ -25,13 +24,10 @@ class Node {
     }
 
     public String toString() {
-        StringBuilder b = new StringBuilder();
-        b.append('[');
-        if (nleft != null) b.append(nleft);
-        else b.append(left);
+        StringBuilder b = new StringBuilder("[");
+        if (nleft != null) b.append(nleft); else b.append(left);
         b.append(",");
-        if (nright != null) b.append(nright);
-        else b.append(right);
+        if (nright != null) b.append(nright); else b.append(right);
         b.append(']');
         return b.toString();
     }
@@ -49,12 +45,6 @@ class Node {
         nr = -1; nrnode = null;
         findNumberRightOf(n);
         return nrnode;
-    }
-
-    public int getNumberBefore(Node n) {
-        nr = -1;
-        findNumberLeftOf(n);
-        return nr;
     }
 
     public boolean findNumberLeftOf(Node n) {
@@ -75,12 +65,6 @@ class Node {
         return true;
     }
 
-    public int getNumberAfter(Node e) {
-        nr = -1;
-        findNumberRightOf(e);
-        return nr;
-    }
-
     public void explode(Node root) {
         Node prev = root.getNodeBefore(this);
         if (prev != null) {
@@ -94,10 +78,8 @@ class Node {
             else throw new IllegalArgumentException("ups2");
         }
 
-        if (parent.nleft == this) {
-            parent.left = 0; parent.nleft = null;
-        } else if (parent.nright == this) {
-            parent.right = 0; parent.nright = null;
+        if (parent.nleft == this) { parent.left = 0; parent.nleft = null;
+        } else if (parent.nright == this) { parent.right = 0; parent.nright = null;
         } else throw new IllegalArgumentException("orphan");
     }
 
@@ -168,13 +150,13 @@ class Node {
             right = -1;
         } else throw new IllegalArgumentException("ups:" + this);
     }
-
 }
 
 class NodeBuilder {
     String s;
     int i;
     char c;
+
     void read() {
         c = s.charAt(i++);
     }
@@ -209,14 +191,13 @@ class NodeBuilder {
         read();
         return parse();
     }
-
 }
-
 
 public class AOC18 {
     public static void main(String[] args) throws IOException {
         new AOC18(args[0]);
     }
+
     NodeBuilder nb = new NodeBuilder();
 
     Node add(Node l, Node r) {
@@ -224,6 +205,35 @@ public class AOC18 {
         Node n = new Node(l, r);
         while (n.doExplode() || n.doSplit());
         return n;
+    }
+
+    public AOC18(String fn) throws IOException {
+        testcases();
+        var a = Files.lines(Paths.get(fn)).toList();
+        Node root = null;
+        for (String s : a) root = add(root, nb.parse(s));
+        System.out.println("part1:" + root.getMagnitude());
+        int max = 0;
+        var p = a;
+        for (int i = 0 ; i < a.size()-1 ; i++) {
+            for (int j = 0 ; j < a.size(); j++) {
+                Node l = nb.parse(p.get(i)), r = nb.parse(p.get(j));
+                int m = add(l,r).getMagnitude();
+                if (m > max) {
+                    //  System.out.println("new max lr: " + m);
+                    max = m;
+                }
+                l = nb.parse(p.get(i));
+                r = nb.parse(p.get(j));
+                m = add(r, l).getMagnitude();
+                if (m > max) {
+                    // System.out.println("new max rl: " + m);
+                    max = m;
+                }
+            }
+        }
+        System.out.println("part2:" + max);
+        if (max != 4650) throw new IllegalStateException();
     }
 
     void testExplode(String root, String exp) {
@@ -316,37 +326,6 @@ public class AOC18 {
         for (String s : homework) root = add(root, nb.parse(s));
     //    System.out.println(root.getMagnitude());
 
-    }
-
-    public AOC18(String fn) throws IOException {
-        testcases();
-        var a = Files.lines(Paths.get(fn)).toList();
-        Node root = null;
-        for (String s : a) root = add(root, nb.parse(s));
-        System.out.println("part1:" + root.getMagnitude());
-        int max = 0;
-
-        var p = a;
-
-        for (int i = 0 ; i < a.size()-1 ; i++) {
-            for (int j = 0 ; j < a.size(); j++) {
-                Node l = nb.parse(p.get(i)), r = nb.parse(p.get(j));
-                int m = add(l,r).getMagnitude();
-                if (m > max) {
-                  //  System.out.println("new max lr: " + m);
-                    max = m;
-                }
-                l = nb.parse(p.get(i));
-                r = nb.parse(p.get(j));
-                m = add(r, l).getMagnitude();
-                if (m > max) {
-                   // System.out.println("new max rl: " + m);
-                    max = m;
-                }
-            }
-        }
-        System.out.println("part2:" + max);
-        if (max != 4650) throw new IllegalStateException();
     }
 
     private void expect(Node nx, String s) {
