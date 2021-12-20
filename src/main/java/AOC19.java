@@ -5,7 +5,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class AOC19 {
+    static long start;
     public static void main(String[] args) throws IOException {
+        start = System.currentTimeMillis();
         new AOC19(args[0]);
     }
 
@@ -45,11 +47,14 @@ public class AOC19 {
         return r;
     }
 
-    record Scanner(String name, List<Coord> coords) {
+  //  record Scanner(String name, List<Coord> coords) {
+    class Scanner {  String name; List<Coord> coords; public Scanner(String n, List<Coord> c) { name = n; coords = c; }
+
+      Map<Coord, Integer> map = new HashMap<>(); // storing the map as member variable instead of local and reusing it makes it about 200ms faster
 
         public Coord findTranslation(Scanner peer) {
             // compute all differences between all points
-            Map<Coord, Integer> map = new HashMap<>();
+            map.clear();
             for (Coord c : coords) {
                 for (Coord d : peer.coords) {
                     Coord diff = c.subtract(d);
@@ -57,14 +62,26 @@ public class AOC19 {
                 }
             }
             // if the same difference occurs between many combinations, the two scanners scan some same beacons
+            /* var r = map.entrySet().stream().filter($ -> $.getValue() >= 12).findFirst();
+            if (!r.isPresent()) return null;
+            return r.get().getKey();
+            */
+
             var r = map.entrySet().stream().filter($ -> $.getValue() >= 12).toList();
             if (r.size() == 0) return null;
             if (r.size() > 1) { System.out.println(r); throw new IllegalStateException("multiple matches"); }
             return r.get(0).getKey();
         }
 
+        List<Scanner> rot;
+
+      public List<Scanner> getAllRotations() {
+          if (rot == null) rot = getAllRotations0();
+          return rot;
+      }
+
         // liste der länge 24 mit allen rotationen
-        public List<Scanner> getAllRotations() {
+        public List<Scanner> getAllRotations0() {
             List<List<Coord>> ret = new ArrayList<>(24);
             for (int i = 0; i < 24; i++) ret.add(new ArrayList<>(coords.size()));
             for (Coord c : coords) {
@@ -95,10 +112,13 @@ public class AOC19 {
                     s.subList(1, s.size()).stream().map(t -> Arrays.stream(t.split(",")).mapToInt(Integer::parseInt).toArray()).map(Coord::of).sorted().collect(Collectors.toList()));
         }).collect(Collectors.toList());
 
+        System.out.println(System.currentTimeMillis() - start);
+
         Scanner base = pool.remove(0);
         var scanners = new ArrayList<Coord>(Collections.singleton(new Coord(0, 0, 0)));
         while (pool.size() > 0) {
-         //   System.out.println("pool size:" + pool.size());
+            System.out.println("pool size:" + pool.size());
+            long time = System.currentTimeMillis();
             outer: for (Scanner sc : pool) {
                 for (var t : sc.getAllRotations()) {
                     Coord trans = base.findTranslation(t);
@@ -110,6 +130,7 @@ public class AOC19 {
                     }
                 }
             }
+            System.out.println("ms:" + (System.currentTimeMillis() - time));
         }
         System.out.println("part1:" + base.coords.size());
         int max = 0;
